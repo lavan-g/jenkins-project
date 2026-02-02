@@ -1,6 +1,10 @@
 pipeline {
     agent { label 'agent-1' }
 
+    options {
+        skipDefaultCheckout(true)
+    }
+
     stages {
 
         stage('Checkout Code') {
@@ -19,12 +23,12 @@ pipeline {
         stage('Deploy to EC2') {
             steps {
                 sshagent(['deploy-key']) {
-                    sh """
-                    ssh ec2-user@10.0.138.94 '
+                    sh '''
+                    ssh -o StrictHostKeyChecking=no ec2-user@10.0.138.94 << EOF
                       sudo rm -rf /usr/share/nginx/html/*
                       sudo cp -r * /usr/share/nginx/html/
-                    '
-                    """
+                    EOF
+                    '''
                 }
             }
         }
