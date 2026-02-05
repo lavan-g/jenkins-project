@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/Balaji-official-006/jenkins-project.git'
+                    url: 'https://github.com/lavan-g/jenkins-project.git'
             }
         }
 
@@ -24,20 +24,21 @@ pipeline {
             steps {
                 sshagent(['deploy-key']) {
                     sh '''
-                    # Ensure target directory exists
-                    ssh -o StrictHostKeyChecking=no ec2-user@10.0.15.212 \
-                      "sudo mkdir -p /usr/share/nginx/html"
+                    ssh -o StrictHostKeyChecking=no ec2-user@54.242.231.72 "
+                      sudo rm -rf /usr/share/nginx/html/*
+                    "
 
-                    # Copy files from Jenkins agent to EC2
-                    scp -o StrictHostKeyChecking=no -r ./* \
-                      ec2-user@54.242.231.72:/tmp/webapp
+                    scp -o StrictHostKeyChecking=no index.html \
+                      ec2-user@54.242.231.72:/tmp/index.html
 
-                    # Move files into nginx directory
-                    ssh -o StrictHostKeyChecking=no ec2-user@10.0.15.212 \
-                      "sudo rm -rf /usr/share/nginx/html/* && sudo cp -r /tmp/webapp/* /usr/share/nginx/html/"
+                    ssh -o StrictHostKeyChecking=no ec2-user@54.242.231.72 "
+                      sudo mv /tmp/index.html /usr/share/nginx/html/index.html
+                      sudo systemctl reload nginx
+                    "
                     '''
                 }
             }
         }
     }
 }
+
