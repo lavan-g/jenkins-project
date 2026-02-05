@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'agent-1' }
+    agent any
 
     options {
         skipDefaultCheckout(true)
