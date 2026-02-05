@@ -30,7 +30,7 @@ pipeline {
 
                     # Copy files from Jenkins agent to EC2
                     scp -o StrictHostKeyChecking=no -r ./* \
-                      ec2-user@10.0.15.212:/tmp/webapp
+                      ec2-user@54.242.231.72:/tmp/webapp
 
                     # Move files into nginx directory
                     ssh -o StrictHostKeyChecking=no ec2-user@10.0.15.212 \
